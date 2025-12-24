@@ -1,1 +1,1 @@
-Quality Detection phase. 
+Quality Detection evaluates raw datasets for structural and data-level issues, including schema validation, missing or invalid values, duplicate keys, and statistical anomalies. Detected issues are categorized by type and severity to support downstream scoring, monitoring, and remediation.
