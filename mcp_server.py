@@ -64,8 +64,6 @@ def analyze_score(req: AnalyzeRequest):
     }
 
 
-
-
     return run_full_analysis(req.csv_path)
 
 
