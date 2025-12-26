@@ -63,7 +63,6 @@ def analyze_score(req: AnalyzeRequest):
         ].head(10).to_dict(orient="records")
     }
 
-
     return run_full_analysis(req.csv_path)
 
 
