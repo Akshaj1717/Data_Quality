@@ -3,12 +3,11 @@ import pandas as pd
 
 def calculate_row_quality_scores(df: pd.DataFrame):
     """
-    Adds a Row_Quality_Score column (0–100) based on per-record issues.
+    Adds Row_Quality_Score and Row_Usability_Status columns.
     """
 
     scores = []
 
-    # Precompute duplicates
     duplicate_ids = df["Employee_ID"].duplicated(keep=False)
 
     for idx, row in df.iterrows():
@@ -36,9 +35,8 @@ def calculate_row_quality_scores(df: pd.DataFrame):
         scores.append(max(score, 0))
 
     df["Row_Quality_Score"] = scores
-    return df
 
- # -----------------------------
+    # -----------------------------
     # Usability classification
     # -----------------------------
     def classify(score):

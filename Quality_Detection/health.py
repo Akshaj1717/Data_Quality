@@ -1,3 +1,5 @@
+import pandas as pd
+
 def classify_dataset_health(df: pd.DataFrame):
     """
     Determines overall dataset health.
