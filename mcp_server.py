@@ -67,6 +67,7 @@ def analyze_score(req: AnalyzeRequest):
 from Quality_Detection.row_scoring import calculate_row_quality_scores
 from Quality_Detection.Quality_Detection import load_data
 from Quality_Detection.health import classify_dataset_health
+
 @app.post("/analyze/health")
 def analyze_health(req: AnalyzeRequest):
     df = load_data(req.csv_path)
@@ -84,6 +85,18 @@ def analyze_health(req: AnalyzeRequest):
             ["Employee_ID", "Row_Quality_Score", "Row_Usability_Status"]
         ].head(10).to_dict(orient="records")
     }
+    from Quality_Detection.persistence import persist_quality_results
+    output_path = persist_quality_results(df)
+    return {
+        "tool": "health",
+        "summary": health,
+        "stored_at": output_path,
+        "preview": df[
+            ["Employee_ID", "Row_Quality_Score", "Row_Usability_Status"]
+        ].head(10).to_dict(orient="records")
+    }
+
+
 
 
 
