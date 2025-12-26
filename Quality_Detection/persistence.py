@@ -19,7 +19,7 @@ def persist_quality_results(df: pd.DataFrame):
 
     df[columns_to_save].to_csv(
         OUTPUT_PATH,
-        mode='W',
+        mode='w',
         index=False
     )
 
