@@ -62,8 +62,29 @@ def analyze_score(req: AnalyzeRequest):
             ["Employee_ID", "Row_Quality_Score"]
         ].head(10).to_dict(orient="records")
     }
-
     return run_full_analysis(req.csv_path)
+
+from Quality_Detection.row_scoring import calculate_row_quality_scores
+from Quality_Detection.Quality_Detection import load_data
+from Quality_Detection.health import classify_dataset_health
+@app.post("/analyze/health")
+def analyze_health(req: AnalyzeRequest):
+    df = load_data(req.csv_path)
+    df = calculate_row_quality_scores(df)
+
+    health = classify_dataset_health(df)
+
+    return {
+        "tool": "health",
+        "summary": health,
+        "usable_rows": int((df["Row_Usability_Status"] == "GOOD").sum()),
+        "warning_rows": int((df["Row_Usability_Status"] == "WARNING").sum()),
+        "bad_rows": int((df["Row_Usability_Status"] == "BAD").sum()),
+        "preview": df[
+            ["Employee_ID", "Row_Quality_Score", "Row_Usability_Status"]
+        ].head(10).to_dict(orient="records")
+    }
+
 
 
 

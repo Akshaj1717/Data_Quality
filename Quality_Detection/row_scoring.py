@@ -37,3 +37,17 @@ def calculate_row_quality_scores(df: pd.DataFrame):
 
     df["Row_Quality_Score"] = scores
     return df
+
+ # -----------------------------
+    # Usability classification
+    # -----------------------------
+    def classify(score):
+        if score >= 85:
+            return "GOOD"
+        elif score >= 70:
+            return "WARNING"
+        return "BAD"
+
+    df["Row_Usability_Status"] = df["Row_Quality_Score"].apply(classify)
+
+    return df
