@@ -1,13 +1,21 @@
-import pandas as pd
 import requests
+import pandas as pd
 
-API_URL = "http://localhost:8000/analyze/health"
+API_URL = "http://127.0.0.1:8000/analyze/health"
 
-def fetch_quality_results(cs_path: str):
-    response = requests.post(API_URL, json={"csv_path": "C:\Users\aksha\MCP_DATA_Quality\Messy_Employee_dataset_v2.csv"})
+def fetch_quality_results(csv_path: str):
+    response = requests.post(
+        API_URL,
+        json={"csv_path": csv_path}
+    )
     response.raise_for_status()
 
     data = response.json()
-    df = pd.read_csv(data["stored at"])
 
-    return data["summary"], df
+    # Summary comes directly from API
+    summary = data["summary"]
+
+    # Preview rows → DataFrame
+    df = pd.DataFrame(data["preview"])
+
+    return summary, df

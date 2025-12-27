@@ -5,13 +5,14 @@ st.set_page_config(page_title="Dataset Quality Dashboard", layout="wide")
 
 st.title("Datset Quality Health Dashboard")
 
-csv_path =  st.text_input("CSV File Path:", "data/employees.csv")
+csv_path =  st.text_input("CSV File Path:", r"C:\Users\aksha\MCP_DATA_Quality\Messy_Employee_dataset_v2.csv"
+)
 
 if st.button("Analyze Dataset"):
     summary, df = fetch_quality_results(csv_path)
 
     st.subheader("Overall Dataset Health")
-    st.metric("Health Status", summary["health_status"])
+    st.metric("Health Status", summary["dataset_health"])
 
     col1, col2, col3 = st.columns(3)
     col1.metric("GOOD Rows", (df["Row_Usability_Status"] == "GOOD").sum())
