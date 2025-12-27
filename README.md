@@ -10,3 +10,16 @@ The system generates a persistent quality table per analysis run, including:
 - Dataset health summary
 
 This enables downstream filtering, reporting, and auditability.
+
+## Dataset Quality Dashboard
+
+Interactive dashboard for visualizing row-level and dataset-level data quality.
+
+  ### Features
+  - Overall dataset health classification
+  - Row-level quality scoring (0–100)
+  - Usability breakdown (GOOD / WARNING / BAD)
+  - Scrollable inspection table
+  
+  Built with Streamlit and powered by a FastAPI backend.
+
