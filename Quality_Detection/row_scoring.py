@@ -19,14 +19,27 @@ def calculate_row_quality_scores(df: pd.DataFrame):
                 score -= 25
 
         # Invalid email
-        if "@" not in str(row["Email"]):
+        if not pd.isna(row["Email"]) and "@" not in str(row["Email"]):
             score -= 20
+
+        #Important Fields
+        if "Age" in df.columns:
+            if pd.isna(row["Age"]):
+                score -= 10
+
+        if "Join_Date" in df.columns:
+            if pd.isna(row["Join_Date"]):
+                score -= 10
 
         # Invalid phone
         if "Phone" in df.columns:
             phone = str(row["Phone"])
             if phone and not phone.isdigit():
                 score -= 15
+        #Invalid Salary
+        if "Salary" in df.columns:
+            if pd.isna(row["Salary"]):
+                score -= 5
 
         # Duplicate primary key
         if duplicate_ids.iloc[idx]:
