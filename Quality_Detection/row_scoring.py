@@ -45,6 +45,14 @@ def calculate_row_quality_scores(df: pd.DataFrame):
         if duplicate_ids.iloc[idx]:
             score -= 30
 
+        from integrations.ssn_client import validate_ssn_via_mcp
+        # SSN validation
+        if "SSN" in df.columns:
+            ssn = str(row["SSN"])
+            if ssn.strip() != "":
+                if not validate_ssn_via_mcp(ssn):
+                    score -= 40
+
         scores.append(max(score, 0))
 
     df["Row_Quality_Score"] = scores
