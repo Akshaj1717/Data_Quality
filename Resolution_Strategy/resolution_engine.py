@@ -27,7 +27,7 @@ def resolve_row(row: pd.Series) -> dict:
     # -----------------------------
     # Deduplication required
     # -----------------------------
-    if row.get("Is Duplocate") is True:
+    if row.get("Is Duplicate") is True:
         return{
             "Resolution_Action": "DEDUPE",
             "Resolution_Reason": "Duplicate Employee_ID",
