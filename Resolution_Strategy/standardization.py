@@ -65,4 +65,35 @@ def apply_standardization(df: pd.DateFrame) -> pd.DataFrame:
                 )
                 df.at[idx, "Phone"] = new_phone
 
+        # Department Standardization
+        if "Department_Region" in df.columns and pd.notna(row["Department_Region"]):
+            new_dept = standardize_department(row["Department_Region"])
+
+            if new_dept != row["Department_Region"]:
+                log_event(
+                    action="STANDARDIZE_DEPARTMENT",
+                    source="standardization",
+                    reason="Normalized department naming format",
+                    record_id=record_id,
+                    severity="INFO",
+                    metadata={"before": row["Department_Region"], "after": new_dept}
+                )
+                df.at[idx, "Department_Region"] = new_dept
+
+        # Hire Data Standardization
+        if "HireDate" in df.columns and pd.notna(row["HireDate"]):
+            new_date = standardize_date(row["HireDate"])
+
+            if new_date != row["HireDate"]:
+                log_event(
+                    action="STANDARDIZE_DATE",
+                    source="standardization",
+                    reason="Converted hire date to ISO format",
+                    record_id=record_id,
+                    severity="INFO",
+                    metadata={"before": row["HireDate"], "after": new_date}
+                )
+                df.at[idx, "HireDate"] = new_date
+    # Returning the cleaned dataset
+    return df
 
