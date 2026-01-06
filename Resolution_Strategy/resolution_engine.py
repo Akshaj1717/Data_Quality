@@ -1,66 +1,75 @@
 import pandas as pd
+from Resolution_Strategy.rules import RESOLUTION_RULES
+from Resolution_Strategy.standardization import apply_standardization
+from Resolution_Strategy.deduplication import deduplicate_by_employee_id
+from Resolution_Strategy.quarantine import quarantine_rows
+from Resolution_Strategy.audit_log import log_event
 
-def resolve_row(row: pd.Series) -> dict:
+class ResolutionEngine:
     """
-    Determines the resolution action for a single row.
-    Returns action, reason, and confidence score.
+    Orchestrates the resolution phase of the data quality pipeline.
+
+    This engine decides how each row should be handled based on:
+    - Row quality score
+    - Usability status
+    - Resolution rules
     """
-    score = row["Row_Quality_Score"]
 
-    # -----------------------------
-    # Hard-fail conditions
-    # -----------------------------
-    if row.get("SSN_Valid") is False:
-        return{
-            "Resolution_Action": "QUARANTINE",
-            "Resolution_Reason": "Invalid SSN",
-            "Resolution_Confidence": 0.95
-        }
+    def __init__(self, rules: RESOLUTION_RULES):
+        """
+        Rules:
+            - Centralized configuration defining thresholds and behaviors
+        """
+        self.rules = rules
 
-    if score < 70:
-        return{
-            "Resolution_Action": "QUARANTINE",
-            "Resolution_Reason": "Low data quality score",
-            "Resolution_Confidence": 0.9
-        }
+    def resolve(self, df: pd.DataFrame):
+        """
+        Main entry point for resolving a dataset.
 
-    # -----------------------------
-    # Deduplication required
-    # -----------------------------
-    if row.get("Is Duplicate") is True:
-        return{
-            "Resolution_Action": "DEDUPE",
-            "Resolution_Reason": "Duplicate Employee_ID",
-            "Resolution_Confidence": 0.85
-        }
+        Returns:
+            - cleaned_df: rows safe to use
+            - quarantined_df: rows isolated for manual review
+        """
 
-    # -----------------------------
-    # Warning-level acceptance
-    # -----------------------------
-    if score < 85:
-        return{
-            "Resolution_Action": "ACCEPT_WITH_WARNING",
-            "Resolution_Reason": "Minor data quality issues",
-            "Resolution_Confidence": 0.7
-        }
+        quarantined_rows = []
 
-    # -----------------------------
-    # Clean record
-    # -----------------------------
-    return{
-        "Resolution_Action": "ACCEPT",
-        "Resolution_Reason": "Meets all quality thresholds",
-        "Resolution_Confidence": 0.99
-    }
+        df = deduplicate_by_employee_id(df)
 
-def apply_resolution_engine(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Applies resolution logic to the entire dataset.
-    """
-    resolutions = df.apply(resolve_row, axis=1, result_type="expand")
+        resolved_rows = []
 
-    df["Resolution_Action"] = resolutions["Resolution_Action"]
-    df["Resolution_Reason"] = resolutions["Resolution_Reason"]
-    df["Resolution_Confidence"] = resolutions["Resolution_Confidence"]
+        for _, row in df.iterrows():
+            decision = self._decide_action(row)
 
-    return df
+            if decision == "ACCEPT":
+                log_event(
+                    row["Employee_ID"],
+                    action="ACCEPT",
+                    reason="Row passed quality thresholds",
+                    severity="INFO",
+                )
+                resolved_rows.append(row)
+            elif decision == "STANDARDIZE":
+                standardized = apply_standardization(row)
+
+                log_event(
+                    row["Employee_ID"],
+                    action="STANDARDIZE",
+                    reason="Minor quality issues auto-corrected",
+                    severity="LOW",
+                )
+                resolved_rows.append(row)
+            elif decision == "QUARANTINE":
+                quarantined = quarantine_rows(row)
+
+                log_event(
+                    row["Employee_ID"],
+                    action="QUARANTINE",
+                    reason="Row failed quality thresholds",
+                    severity="HIGH",
+                )
+                quarantined_rows.append(quarantined)
+
+        cleaned_df = pd.DataFrame(resolved_rows)
+        quarantined_df = pd.DataFrame(quarantined_rows)
+
+        return cleaned_df, quarantined_df
