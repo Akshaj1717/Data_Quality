@@ -73,3 +73,24 @@ class ResolutionEngine:
         quarantined_df = pd.DataFrame(quarantined_rows)
 
         return cleaned_df, quarantined_df
+
+    def _decide_action(self, row: pd.Series) -> str:
+        """
+        Determines what should happen to a single row.
+        """
+
+        score = row["Row_Quality_Score"]
+        status = row["Row_Usability_Status"]
+
+        if status == "BAD":
+            return "QUARANTINE"
+
+        if status == "WARNING":
+            if score >= self.rules.RESOLUTION_RULES:
+                return "STANDARDIZE"
+            return "QUARANTINE"
+
+        if status == "GOOD":
+            return "ACCEPT"
+
+        return "QUARANTINE"
