@@ -101,7 +101,7 @@ def analyze_health(req: AnalyzeRequest):
         ].head(10).to_dict(orient="records")
     }
 
-from Monitoring.metrics import computer_resolution_engine
+from Monitoring.metrics import compute_resolution_engine
 from Monitoring.alerts import evaluate_alerts
 from Monitoring.history import log_run_metrics
 from Resolution_Strategy.resolution_engine import ResolutionEngine
@@ -118,7 +118,7 @@ def monitor_dataset(req: AnalyzeRequest):
     engine = ResolutionEngine(RESOLUTION_RULES)
     cleaned_df, quarantined_df = engine.resolve(df)
 
-    metrics = computer_resolution_engine(cleaned_df)
+    metrics = compute_resolution_engine(cleaned_df)
     alerts = evaluate_alerts(metrics)
     log_run_metrics(metrics)
 
