@@ -101,6 +101,35 @@ def analyze_health(req: AnalyzeRequest):
         ].head(10).to_dict(orient="records")
     }
 
+from Monitoring.metrics import computer_resolution_engine
+from Monitoring.alerts import evaluate_alerts
+from Monitoring.history import log_run_metrics
+from Resolution_Strategy.resolution_engine import ResolutionEngine
+from Resolution_Strategy.rules import RESOLUTION_RULES
+@app.post("/monitor/run")
+def monitor_dataset(req: AnalyzeRequest):
+    """
+    Runs resolution + monitoring on a dataset
+    """
+
+    df = load_data(req.csv_path)
+    df = calculate_row_quality_scores(df)
+
+    engine = ResolutionEngine(RESOLUTION_RULES)
+    cleaned_df, quarantined_df = engine.resolve(df)
+
+    metrics = computer_resolution_engine(cleaned_df)
+    alerts = evaluate_alerts(metrics)
+    log_run_metrics(metrics)
+
+    return {
+        "tool": "monitor",
+        "metrics": metrics,
+        "alerts": alerts,
+        "cleaned_rows": len(cleaned_df),
+        "quarantined_rows": len(quarantined_df)
+    }
+
 
 
 
