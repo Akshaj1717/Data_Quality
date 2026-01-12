@@ -28,7 +28,7 @@ Interactive dashboard for visualizing row-level and dataset-level data quality.
 
 ---
 
-# MCP Data Quality & Resolution System
+# Agentic AI Data Quality Resolution on MCP Platform 
 
 This project implements an end-to-end **data quality monitoring and resolution framework**, inspired by Model Context Protocol (MCP) concepts.  
 It is designed to detect, explain, monitor, and resolve data quality issues in structured datasets.
