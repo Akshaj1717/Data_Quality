@@ -68,6 +68,9 @@ from Quality_Detection.row_scoring import calculate_row_quality_scores
 from Quality_Detection.Quality_Detection import load_data
 from Quality_Detection.health import classify_dataset_health
 from Quality_Detection.persistence import persist_quality_results
+from Monitoring.history import log_run_metrics
+from Monitoring.trends import compute_trends
+from Monitoring.sla import evaluate_sla
 @app.post("/analyze/health")
 def analyze_health(req: AnalyzeRequest):
     """
@@ -87,13 +90,33 @@ def analyze_health(req: AnalyzeRequest):
 
     output_path = persist_quality_results(df)
 
+    metrics = {
+        "total_rows": len(df),
+        "usable_rows": int((df["Row_Usability_Status"] == "GOOD").sum()),
+        "warning_rows": int((df["Row_Usability_Status"] == "WARNING").sum()),
+        "bad_rows": int((df["Row_Usability_Status"] == "BAD").sum()),
+        "average_score": round(df["Row_Quality_Score"].mean(), 2),
+    }
+
+    # Persist run history
+    log_run_metrics(metrics)
+
+    # Compute trends across runs
+    trends = compute_trends()
+
+    # Evaluate SLA
+    sla = evaluate_sla(metrics)
+
     return {
         "tool": "health",
         "summary": health,
         "row_counts": {
             "usable_rows": int((df["Row_Usability_Status"] == "GOOD").sum()),
             "warning_rows": int((df["Row_Usability_Status"] == "WARNING").sum()),
-            "bad_rows": int((df["Row_Usability_Status"] == "BAD").sum())
+            "bad_rows": int((df["Row_Usability_Status"] == "BAD").sum()),
+            "metrics": metrics,
+            "trends": trends,
+            "sla": sla,
         },
         "stored_at": output_path,
         "preview": df[
