@@ -153,6 +153,43 @@ def monitor_dataset(req: AnalyzeRequest):
         "quarantined_rows": len(quarantined_df)
     }
 
+import pandas as pd
+from Human_Review.review_queue import build_review_queue
+from Human_Review.review_decisions import apply_review_decision
+from Human_Review.review_models import ReviewDecision
+DATA_PATH = "outputs/quality_results.csv"
+@app.get("/review/queue")
+def get_review_queue():
+    """
+    Returns all rows that need human review.
+    """
+    df = pd.read_csv(DATA_PATH)
+    review_queue = build_review_queue(df)
+    return{
+        "count": len(review_queue),
+        "items": review_queue.to_dict(orient="records")
+    }
+
+@app.post("/review/decision")
+def submit_review_decision(decision: ReviewDecision):
+    """
+    Receives a decision from a human reviewer.
+    """
+    df = pd.read_csv(DATA_PATH)
+    df = apply_review_decision(
+        df,
+        employee_id=decision.employee_id,
+        decision=decision.decision,
+        notes=decision.reviewer_notes
+    )
+
+    df.to_csv(DATA_PATH, index=False)
+
+    return {
+        "status": "success",
+        "employee_id": decision.employee_id,
+        "decision": decision.decision
+    }
 
 
 
