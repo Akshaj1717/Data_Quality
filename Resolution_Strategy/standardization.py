@@ -1,6 +1,5 @@
 import pandas as pd
-from datetime import datetime
-from audit_log import log_event
+from Audit.audit_log import log_event
 
 #These are the helper functions
 

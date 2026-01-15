@@ -1,6 +1,6 @@
 import pandas as pd
 
-def compute_resolution_engine(df: pd.DataFram) -> dict:
+def compute_resolution_engine(df: pd.DataFrame) -> dict:
     """
     Computes high level metrics for monitoring data quality outcomes.
     """

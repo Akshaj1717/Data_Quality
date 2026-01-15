@@ -3,7 +3,7 @@ from Resolution_Strategy.rules import RESOLUTION_RULES
 from Resolution_Strategy.standardization import apply_standardization
 from Resolution_Strategy.deduplication import deduplicate_by_employee_id
 from Resolution_Strategy.quarantine import quarantine_rows
-from Resolution_Strategy.audit_log import log_event
+from Audit.audit_log import log_event
 
 class ResolutionEngine:
     """
