@@ -23,7 +23,7 @@ def standardize_date(value):
 
 #This is the main engine that will apply the changes
 
-def apply_standardization(df: pd.DateFrame) -> pd.DataFrame:
+def apply_standardization(df: pd.DataFrame) -> pd.DataFrame:
     """
     Applies safe, rule based standardization.
     All changes are logged to the audit log.

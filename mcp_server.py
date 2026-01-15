@@ -158,8 +158,8 @@ from Human_Review.review_queue import build_review_queue
 from Human_Review.review_decisions import apply_review_decision
 from Human_Review.review_models import ReviewDecision
 DATA_PATH = "outputs/quality_results.csv"
-@app.get("/review/queue")
-def get_review_queue():
+@app.post("/review/queue")
+def get_review_queue(req: AnalyzeRequest):
     """
     Returns all rows that need human review.
     """
