@@ -33,7 +33,7 @@ class ResolutionEngine:
 
         quarantined_rows = []
 
-        df = deduplicate_by_employee_id(df)
+        df = deduplicate_by_employee_id(df)[0]
 
         resolved_rows = []
 
@@ -57,7 +57,7 @@ class ResolutionEngine:
                     reason="Minor quality issues auto-corrected",
                     severity="LOW",
                 )
-                resolved_rows.append(row)
+                resolved_rows.append(standardized)
             elif decision == "QUARANTINE":
                 quarantined = quarantine_rows(row)
 
@@ -82,15 +82,19 @@ class ResolutionEngine:
         score = row["Row_Quality_Score"]
         status = row["Row_Usability_Status"]
 
+        # Bad rows always quarantined
         if status == "BAD":
             return "QUARANTINE"
 
+        # Warning rows may be standardized
         if status == "WARNING":
-            if score >= self.rules.RESOLUTION_RULES:
+            if score >= self.rules["STANDARDIZE_MIN_SCORE"]:
                 return "STANDARDIZE"
             return "QUARANTINE"
 
+        # Good rows are accepted
         if status == "GOOD":
             return "ACCEPT"
 
         return "QUARANTINE"
+
