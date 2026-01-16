@@ -36,7 +36,7 @@ def deduplicate_by_employee_id(df: pd.DataFrame):
     deduped_rows = []
     removed_rows = []
 
-    for emp_id, group in df.grouby("Employee_ID"):
+    for emp_id, group in df.groupby("Employee_ID"):
         if len(group):
             deduped_rows.append(group.iloc[0])
         else:
