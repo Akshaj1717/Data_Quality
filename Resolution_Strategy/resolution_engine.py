@@ -59,7 +59,10 @@ class ResolutionEngine:
                 )
                 resolved_rows.append(standardized)
             elif decision == "QUARANTINE":
-                quarantined = quarantine_rows(row)
+                quarantined = quarantine_rows(
+                    row,
+                    reason="Row failed quality thresholds"
+                )
 
                 log_event(
                     row["Employee_ID"],
