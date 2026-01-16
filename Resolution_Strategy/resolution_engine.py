@@ -60,7 +60,7 @@ class ResolutionEngine:
                     record_id=row["Employee_ID"],
                     severity="LOW",
                 )
-
+                standardized["Resolution_Action"] = "STANDARDIZE"
                 resolved_rows.append(standardized)
             elif decision == "QUARANTINE":
                 quarantined = quarantine_rows(
@@ -75,6 +75,7 @@ class ResolutionEngine:
                     record_id=row["Employee_ID"],
                     severity="HIGH",
                 )
+                quarantined["Resolution_Action"] = "QUARANTINE"
                 quarantined_rows.append(quarantined)
 
         cleaned_df = pd.DataFrame(resolved_rows)
