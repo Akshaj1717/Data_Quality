@@ -135,16 +135,22 @@ def monitor_dataset(req: AnalyzeRequest):
     Runs resolution + monitoring on a dataset
     """
 
+    print("STEP 1: loading data")
     df = load_data(req.csv_path)
+
+    print("STEP 2: scoring rows")
     df = calculate_row_quality_scores(df)
 
+    print("STEP 3: resolving")
     engine = ResolutionEngine(RESOLUTION_RULES)
     cleaned_df, quarantined_df = engine.resolve(df)
 
+    print("STEP 4: computing metrics")
     metrics = compute_resolution_engine(cleaned_df)
     alerts = evaluate_alerts(metrics)
     log_run_metrics(metrics)
 
+    print("done")
     return {
         "tool": "monitor",
         "metrics": metrics,
@@ -190,6 +196,7 @@ def submit_review_decision(decision: ReviewDecision):
         "employee_id": decision.employee_id,
         "decision": decision.decision
     }
+
 
 
 
