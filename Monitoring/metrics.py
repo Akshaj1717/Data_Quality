@@ -9,9 +9,9 @@ def compute_resolution_engine(df: pd.DataFrame) -> dict:
 
     metrics = {
         "total_rows": total,
-        "accepted": int((df["Resolution_Action" == "ACCEPT"]).sum()),
+        "accepted": int((df["Resolution_Action"] == "ACCEPT").sum()),
         "standardized": int((df["Resolution_Action"] == "STANDARDIZE").sum()),
-        "quarantined": int ((df["Resolution_Action"] == "QUARANTINE").sum())
+        "quarantined": int((df["Resolution_Action"] == "QUARANTINE").sum())
     }
 
     metrics["accept_rate"] = round(metrics["accepted"] / total, 3)

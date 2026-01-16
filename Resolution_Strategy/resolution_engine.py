@@ -48,7 +48,7 @@ class ResolutionEngine:
                     record_id=row["Employee_ID"],
                     severity="INFO",
                 )
-
+                row["Resolution_Action"] = "ACCEPT"
                 resolved_rows.append(row)
             elif decision == "STANDARDIZE":
                 standardized = apply_standardization(row)
@@ -60,6 +60,7 @@ class ResolutionEngine:
                     record_id=row["Employee_ID"],
                     severity="LOW",
                 )
+
                 resolved_rows.append(standardized)
             elif decision == "QUARANTINE":
                 quarantined = quarantine_rows(

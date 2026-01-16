@@ -1,0 +1,10 @@
+{"timestamp": "2026-01-16T20:18:29.320344", "action": "QUARANTINE", "source": "resolution_engine", "reason": "Row failed quality thresholds", "record_id": "EMP1000", "severity": "HIGH", "metadata": {}}
+{"timestamp": "2026-01-16T20:18:29.326821", "action": "QUARANTINE", "source": "resolution_engine", "reason": "Row failed quality thresholds", "record_id": "EMP1001", "severity": "HIGH", "metadata": {}}
+{"timestamp": "2026-01-16T20:18:29.330204", "action": "QUARANTINE", "source": "resolution_engine", "reason": "Row failed quality thresholds", "record_id": "EMP1002", "severity": "HIGH", "metadata": {}}
+{"timestamp": "2026-01-16T20:18:29.336780", "action": "QUARANTINE", "source": "resolution_engine", "reason": "Row failed quality thresholds", "record_id": "EMP1003", "severity": "HIGH", "metadata": {}}
+{"timestamp": "2026-01-16T20:18:29.342835", "action": "QUARANTINE", "source": "resolution_engine", "reason": "Row failed quality thresholds", "record_id": "EMP1004", "severity": "HIGH", "metadata": {}}
+{"timestamp": "2026-01-16T20:18:29.346866", "action": "QUARANTINE", "source": "resolution_engine", "reason": "Row failed quality thresholds", "record_id": "EMP1005", "severity": "HIGH", "metadata": {}}
+{"timestamp": "2026-01-16T20:18:29.352920", "action": "QUARANTINE", "source": "resolution_engine", "reason": "Row failed quality thresholds", "record_id": "EMP1006", "severity": "HIGH", "metadata": {}}
+{"timestamp": "2026-01-16T20:18:29.354938", "action": "QUARANTINE", "source": "resolution_engine", "reason": "Row failed quality thresholds", "record_id": "EMP1007", "severity": "HIGH", "metadata": {}}
+{"timestamp": "2026-01-16T20:18:29.361771", "action": "QUARANTINE", "source": "resolution_engine", "reason": "Row failed quality thresholds", "record_id": "EMP1008", "severity": "HIGH", "metadata": {}}
+{"timestamp": "2026-01-16T20:18:29.370163", "action": "QUARANTINE", "source": "resolution_engine", "reason": "Row failed quality thresholds", "record_id": "EMP1009", "severity": "HIGH", "metadata": {}}
