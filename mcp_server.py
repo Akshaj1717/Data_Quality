@@ -136,7 +136,7 @@ def monitor_dataset(req: AnalyzeRequest):
     """
 
     print("STEP 1: loading data")
-    df = load_data(req.csv_path)
+    df = load_data(req.csv_path).head(1000)
 
     print("STEP 2: scoring rows")
     df = calculate_row_quality_scores(df)
