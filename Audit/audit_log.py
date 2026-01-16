@@ -26,7 +26,7 @@ def log_event(
         "reason": reason,
         "record_id": record_id,
         "severity": severity,
-        "metdata": metadata or {}
+        "metadata": metadata or {}
     }
 
     with open(AUDIT_LOG_PATH, "a", encoding="utf-8") as f:
