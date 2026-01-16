@@ -42,19 +42,22 @@ class ResolutionEngine:
 
             if decision == "ACCEPT":
                 log_event(
-                    row["Employee_ID"],
                     action="ACCEPT",
+                    source="resolution_engine",
                     reason="Row passed quality thresholds",
+                    record_id=row["Employee_ID"],
                     severity="INFO",
                 )
+
                 resolved_rows.append(row)
             elif decision == "STANDARDIZE":
                 standardized = apply_standardization(row)
 
                 log_event(
-                    row["Employee_ID"],
                     action="STANDARDIZE",
+                    source="resolution_engine",
                     reason="Minor quality issues auto-corrected",
+                    record_id=row["Employee_ID"],
                     severity="LOW",
                 )
                 resolved_rows.append(standardized)
@@ -65,9 +68,10 @@ class ResolutionEngine:
                 )
 
                 log_event(
-                    row["Employee_ID"],
                     action="QUARANTINE",
+                    source="resolution_engine",
                     reason="Row failed quality thresholds",
+                    record_id=row["Employee_ID"],
                     severity="HIGH",
                 )
                 quarantined_rows.append(quarantined)
