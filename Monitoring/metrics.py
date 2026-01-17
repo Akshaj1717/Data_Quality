@@ -7,6 +7,21 @@ def compute_resolution_engine(df: pd.DataFrame) -> dict:
 
     total = len(df)
 
+    if total == 0 or "Resolution_Action" not in df.columns:
+        return {
+            "total_rows": total,
+            "accepted": 0,
+            "standardized": 0,
+            "quarantined": 0,
+            "accept_rate": 0.0,
+            "standardize_rate": 0.0,
+            "quarantine_rate": 0.0,
+        }
+
+    accepted = int((df["Resolution_Action"] == "ACCEPT").sum())
+    standardized = int((df["Resolution_Action"] == "STANDARDIZE").sum())
+    quarantined = int((df["Resolution_Action"] == "QUARANTINE").sum())
+
     metrics = {
         "total_rows": total,
         "accepted": int((df["Resolution_Action"] == "ACCEPT").sum()),
