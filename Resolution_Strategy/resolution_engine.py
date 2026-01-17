@@ -58,6 +58,8 @@ class ResolutionEngine:
                 quarantined_rows.append(quarantined.to_dict())
 
         cleaned_df = pd.DataFrame(resolved_rows)
+        print(cleaned_df.columns.tolist())
+        print(cleaned_df["Resolution_Action"].value_counts())
         quarantined_df = pd.DataFrame(quarantined_rows)
 
         return cleaned_df, quarantined_df
