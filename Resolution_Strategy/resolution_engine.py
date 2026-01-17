@@ -66,7 +66,10 @@ class ResolutionEngine:
 
         cleaned_df = pd.DataFrame(resolved_rows)
         print(cleaned_df.columns.tolist())
-        print(cleaned_df["Resolution_Action"].value_counts())
+        if "Resolution_Action" in cleaned_df.columns:
+            print(cleaned_df["Resolution_Action"].value_counts())
+        else:
+            print("No resolved rows")
         quarantined_df = pd.DataFrame(quarantined_rows)
 
         return cleaned_df, quarantined_df
