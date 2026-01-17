@@ -24,9 +24,13 @@ def compute_resolution_engine(df: pd.DataFrame) -> dict:
 
     metrics = {
         "total_rows": total,
-        "accepted": int((df["Resolution_Action"] == "ACCEPT").sum()),
-        "standardized": int((df["Resolution_Action"] == "STANDARDIZE").sum()),
-        "quarantined": int((df["Resolution_Action"] == "QUARANTINE").sum())
+        "accepted": accepted,
+        "standardized": standardized,
+        "quarantined": quarantined,
+        # Rates are guarded against division-by-zero
+        "accept_rate": round(accepted / total, 3) if total > 0 else 0.0,
+        "standardize_rate": round(standardized / total, 3) if total > 0 else 0.0,
+        "quarantine_rate": round(quarantined / total, 3) if total > 0 else 0.0,
     }
 
     metrics["accept_rate"] = round(metrics["accepted"] / total, 3)
