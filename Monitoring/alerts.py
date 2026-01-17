@@ -5,7 +5,7 @@ def evaluate_alerts(metrics: dict) -> list:
 
     alerts = []
 
-    if metrics["quaratine_rate"] > 0.20:
+    if metrics["quarantine_rate"] > 0.20:
         alerts.append({
             "level": "HIGH",
             "message": "Quarantine rate exceeded 20%"
