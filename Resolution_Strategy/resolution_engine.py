@@ -31,6 +31,9 @@ class ResolutionEngine:
             - quarantined_df: rows isolated for manual review
         """
 
+        print("Incoming columns:", df.columns.tolist())
+        print(df[["Row_Quality_Score", "Row_Usability_Status"]].head())
+
         quarantined_rows = []
 
         df = deduplicate_by_employee_id(df)[0]
