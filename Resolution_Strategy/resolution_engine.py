@@ -48,6 +48,7 @@ class ResolutionEngine:
 
         for _, row in df.iterrows():
             decision = self._decide_action(row)
+            print(row["Employee_ID"], row["Row_Usability_Status"], row["Row_Quality_Score"], "→", decision)
 
             if decision == "ACCEPT":
                 row["Resolution_Action"] = "ACCEPT"
