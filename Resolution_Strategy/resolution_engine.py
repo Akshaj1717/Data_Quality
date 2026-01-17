@@ -36,7 +36,10 @@ class ResolutionEngine:
 
         quarantined_rows = []
 
+        before = len(df)
         df = deduplicate_by_employee_id(df)[0]
+        after = len(df)
+        print(f"Dedup: {before} → {after}")
 
         resolved_rows = []
 
