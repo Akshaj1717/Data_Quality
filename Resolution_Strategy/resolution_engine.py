@@ -80,7 +80,7 @@ class ResolutionEngine:
         """
 
         score = row["Row_Quality_Score"]
-        status = row["Row_Usability_Status"]
+        status = str(row["Row_Usability_Status"]).upper()
 
         # Bad rows always quarantined
         if status == "BAD":
