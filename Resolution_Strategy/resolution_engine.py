@@ -37,46 +37,25 @@ class ResolutionEngine:
 
         resolved_rows = []
 
+        df = df.copy()
+        df["Resolution_Action"] = None
+
         for _, row in df.iterrows():
             decision = self._decide_action(row)
 
             if decision == "ACCEPT":
-                log_event(
-                    action="ACCEPT",
-                    source="resolution_engine",
-                    reason="Row passed quality thresholds",
-                    record_id=row["Employee_ID"],
-                    severity="INFO",
-                )
                 row["Resolution_Action"] = "ACCEPT"
-                resolved_rows.append(row)
+                resolved_rows.append(row.to_dict())
+
             elif decision == "STANDARDIZE":
                 standardized = apply_standardization(row)
-
-                log_event(
-                    action="STANDARDIZE",
-                    source="resolution_engine",
-                    reason="Minor quality issues auto-corrected",
-                    record_id=row["Employee_ID"],
-                    severity="LOW",
-                )
                 standardized["Resolution_Action"] = "STANDARDIZE"
-                resolved_rows.append(standardized)
-            elif decision == "QUARANTINE":
-                quarantined = quarantine_rows(
-                    row,
-                    reason="Row failed quality thresholds"
-                )
+                resolved_rows.append(standardized.to_dict())
 
-                log_event(
-                    action="QUARANTINE",
-                    source="resolution_engine",
-                    reason="Row failed quality thresholds",
-                    record_id=row["Employee_ID"],
-                    severity="HIGH",
-                )
+            elif decision == "QUARANTINE":
+                quarantined = quarantine_rows(row, reason="Row failed quality thresholds")
                 quarantined["Resolution_Action"] = "QUARANTINE"
-                quarantined_rows.append(quarantined)
+                quarantined_rows.append(quarantined.to_dict())
 
         cleaned_df = pd.DataFrame(resolved_rows)
         quarantined_df = pd.DataFrame(quarantined_rows)
