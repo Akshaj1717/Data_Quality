@@ -155,7 +155,8 @@ def check_type_consistency(df: pd.DataFrame):
 
         # Try to convert the column to datetime
         # errors='coerce' turns non-date values into NaT
-        datetime_converted = pd.to_datetime(non_null, errors="coerce", infer_datetime_format=True)
+        # Note: infer_datetime_format was removed — pandas 2.x infers format automatically
+        datetime_converted = pd.to_datetime(non_null, errors="coerce")
         datetime_valid_count = datetime_converted.notna().sum()
         datetime_pct = datetime_valid_count / len(non_null)
 
