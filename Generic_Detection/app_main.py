@@ -23,7 +23,7 @@ Architecture Note:
 from mcp_server import app
 
 # Import the new generic upload router from generic_api.py
-from generic_api import router as generic_router
+from Generic_Detection.generic_api import router as generic_router
 
 # =============================================================
 # MOUNT THE NEW ROUTER ONTO THE EXISTING APP
