@@ -36,9 +36,9 @@ from Generic_Detection.generic_pipeline import run_generic_pipeline
 # Directory where uploaded files will be saved
 UPLOAD_DIR = "uploads"
 
-# Maximum file size in bytes (50MB)
-# 50 * 1024 * 1024 = 52,428,800 bytes
-MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024
+# Maximum file size in bytes (200MB)
+# 200 * 1024 * 1024 = 209,715,200 bytes
+MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024
 
 # =============================================================
 # ROUTER SETUP
@@ -153,7 +153,7 @@ async def upload_and_analyze(file: UploadFile = File(...)):
             status_code=413,
             detail={
                 "error": "File too large",
-                "message": f"File is {size_mb}MB. Maximum allowed is 50MB."
+                "message": f"File is {size_mb}MB. Maximum allowed is 200MB."
             }
         )
 
