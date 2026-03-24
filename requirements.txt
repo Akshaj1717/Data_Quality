@@ -1,0 +1,18 @@
+# Core Backend
+fastapi
+uvicorn
+python-multipart
+pydantic
+requests
+
+# Data Analysis
+pandas
+numpy
+
+# Frontend Dashboard
+streamlit
+plotly
+
+# Security / Misc
+pathlib
+datetime
