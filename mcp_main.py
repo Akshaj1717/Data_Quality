@@ -294,6 +294,136 @@ def check_type_consistency(csv_path: str) -> dict:
 
 
 # =============================================================
+# TOOL 6: VALIDATE COLUMN RANGE
+# =============================================================
+# Checks if numeric values in a column are within a specific min and max.
+# This mimics the "Age 18-70" or "Salary > 0" logic from the employee app.
+
+@mcp.tool()
+def validate_column_range(csv_path: str, column: str, min_val: float = None, max_val: float = None) -> dict:
+    """
+    Checks if numeric values in a column are within a specific [min, max] range.
+    Returns the count and list of violations (out-of-bounds rows).
+
+    Use this tool to enforce business context (e.g., "Age must be 18-70").
+    """
+    df = pd.read_csv(csv_path)
+
+    if column not in df.columns:
+        return {"error": f"Column '{column}' not found."}
+
+    # Convert to numeric, handle NaN
+    vals = pd.to_numeric(df[column], errors="coerce")
+    non_null_mask = vals.notna()
+
+    violations = []
+
+    # Check for Min
+    if min_val is not None:
+        too_low_mask = non_null_mask & (vals < min_val)
+        if too_low_mask.any():
+            violations.append({
+                "type": "TOO_LOW",
+                "threshold": min_val,
+                "count": int(too_low_mask.sum())
+            })
+
+    # Check for Max
+    if max_val is not None:
+        too_high_mask = non_null_mask & (vals > max_val)
+        if too_high_mask.any():
+            violations.append({
+                "type": "TOO_HIGH",
+                "threshold": max_val,
+                "count": int(too_high_mask.sum())
+            })
+
+    # Severity
+    total_violations = sum(v["count"] for v in violations)
+    severity = "HIGH" if total_violations > (len(df) * 0.1) else "MEDIUM" if total_violations > 0 else "LOW"
+
+    return {
+        "column": column,
+        "total_rows_checked": int(non_null_mask.sum()),
+        "violation_count": total_violations,
+        "violations": violations,
+        "severity": severity
+    }
+
+
+# =============================================================
+# TOOL 7: CHECK SCHEMA VALIDITY
+# =============================================================
+# Compares the CSV's columns against a list provided by the LLM.
+# Ensures the dataset is "valid" for the intended business use.
+
+@mcp.tool()
+def check_schema_validity(csv_path: str, expected_columns: list[str]) -> dict:
+    """
+    Checks if the dataset contains all the required (expected) columns.
+    Returns which columns are missing and which extra columns are present.
+
+    Use this tool to verify the dataset's structure against a business schema.
+    """
+    df = pd.read_csv(csv_path, nrows=0) # Read only headers for speed
+    actual_columns = df.columns.tolist()
+
+    missing = [col for col in expected_columns if col not in actual_columns]
+    extra = [col for col in actual_columns if col not in expected_columns]
+
+    status = "VALID" if not missing else "INVALID"
+
+    return {
+        "status": status,
+        "actual_columns": actual_columns,
+        "missing_columns": missing,
+        "extra_columns": extra,
+        "is_schema_match": len(missing) == 0
+    }
+
+
+# =============================================================
+# TOOL 8: CHECK REGEX PATTERN
+# =============================================================
+# Validates string values against a regex pattern (Email, Phone, SSN).
+# The pattern is provided by the LLM client, keeping it flexible.
+
+@mcp.tool()
+def check_regex_pattern(csv_path: str, column: str, pattern: str, description: str = "custom pattern") -> dict:
+    """
+    Validates a string column against a regular expression (regex).
+    Returns the count of rows that DO NOT match the pattern.
+
+    Common patterns:
+    - Email: ^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$
+    - Phone: ^\\d{3}-\\d{3}-\\d{4}$
+    """
+    df = pd.read_csv(csv_path)
+
+    if column not in df.columns:
+        return {"error": f"Column '{column}' not found."}
+
+    # Clean data (remove NaN) for checking
+    series = df[column].astype(str).replace('nan', None).dropna()
+
+    import re
+    compiled_regex = re.compile(pattern)
+
+    # Find non-matches
+    invalid_mask = series.apply(lambda x: not bool(compiled_regex.match(str(x))))
+    invalid_count = int(invalid_mask.sum())
+    invalid_pct = round((invalid_count / len(df)) * 100, 2)
+
+    return {
+        "column": column,
+        "description": description,
+        "invalid_count": invalid_count,
+        "invalid_pct": invalid_pct,
+        "severity": "HIGH" if invalid_pct > 5 else "MEDIUM" if invalid_pct > 0 else "LOW"
+    }
+
+
+# =============================================================
 # ENTRY POINT
 # =============================================================
 # When you run `fastmcp run mcp_main.py`, this starts the server.
