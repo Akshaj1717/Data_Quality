@@ -1,11 +1,12 @@
 import pandas as pd
 from datetime import datetime
+from typing import Optional
 
 def apply_review_decision(
         df: pd.DataFrame,
         employee_id: str,
         decision: str,
-        notes: str | None = None
+        notes: Optional[str] = None
 ) -> pd.DataFrame:
     """
     Applies a human decision to ONE row in the dataset.

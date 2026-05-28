@@ -1,2 +1,4 @@
 total_rows,accepted,standardized,quarantined,accept_rate,standardize_rate,quarantine_rate,timestamp
 0,0,0,0,0.0,0.0,0.0,2026-01-17T18:46:43.506306
+1020,787,233,0,0.772,0.228,0.0,2026-05-28T17:40:38.556057
+503,397,106,0,0.789,0.211,0.0,2026-05-28T17:41:23.763089

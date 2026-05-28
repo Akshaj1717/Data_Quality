@@ -11,8 +11,15 @@ def build_review_queue(df: pd.DataFrame) -> pd.DataFrame:
 
     review_df = df[
         (df["Resolution_Action"] == "QUARANTINE") |
-        (df["Resolution_Confidence"] <0.8)
+        (df["Resolution_Confidence"] < 0.8)
     ].copy()
+
+    if "Human_Reviewed" in review_df.columns:
+        review_df = review_df[
+            (review_df["Human_Reviewed"] != True) &
+            (review_df["Human_Reviewed"] != "True") &
+            (review_df["Human_Reviewed"] != 1)
+        ]
 
     review_df = review_df[
         [

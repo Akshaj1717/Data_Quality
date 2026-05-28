@@ -6,7 +6,7 @@ def run_full_analysis(csv_path: str):
     schema_result  = run_schema_checks(csv_path)
 
     #stop if schema fails
-    if schema_result["status"] == "FAIl":
+    if schema_result["status"] == "FAIL":
         return{
             "tool": "full",
             "status": "FAIL",

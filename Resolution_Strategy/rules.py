@@ -20,6 +20,7 @@ RESOLUTION_RULES = {
     "LOW_SCORE": {
         "severity": "CRITICAL",
         "action": "QUARANTINE"
-    }
+    },
+    "STANDARDIZE_MIN_SCORE": 70
 }
 

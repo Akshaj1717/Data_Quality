@@ -19,6 +19,7 @@ def check_anomalies(df: pd.DataFrame):
     # -----------------------------
     # 1. Invalid email formats
     # -----------------------------
+    invalid_count = 0
     if "Email" in df.columns:
         invalid_emails = ~df["Email"].astype(str).str.match(EMAIL_REGEX)
         invalid_count = invalid_emails.sum()
@@ -71,27 +72,27 @@ def check_anomalies(df: pd.DataFrame):
                 "message": "Salary must be greater than 0"
             })
 
-    # -----------------------------
-    # 4. Salary outliers (IQR)
-    # -----------------------------
-    q1 = salary.quantile(0.25)
-    q3 = salary.quantile(0.75)
-    iqr = q3- q1
+        # -----------------------------
+        # 4. Salary outliers (IQR)
+        # -----------------------------
+        q1 = salary.quantile(0.25)
+        q3 = salary.quantile(0.75)
+        iqr = q3 - q1
 
-    upper_bound = q3 + 1.5 * iqr
-    lower_bound = q1 - 1.5 * iqr
+        upper_bound = q3 + 1.5 * iqr
+        lower_bound = q1 - 1.5 * iqr
 
-    outliers = (salary < lower_bound) | (salary > upper_bound)
-    outlier_count = outliers.sum()
+        outliers = (salary < lower_bound) | (salary > upper_bound)
+        outlier_count = outliers.sum()
 
-    if outlier_count > 0:
-        issues.append({
-            "category": "SALARY_OUTLIER",
-            "column": "Salary",
-            "count": int(outlier_count),
-            "severity": "MEDIUM",
-            "message": "Salary outliers detected using IQR"
-        })
+        if outlier_count > 0:
+            issues.append({
+                "category": "SALARY_OUTLIER",
+                "column": "Salary",
+                "count": int(outlier_count),
+                "severity": "MEDIUM",
+                "message": "Salary outliers detected using IQR"
+            })
 
     return issues
 

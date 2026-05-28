@@ -8,7 +8,7 @@ def load_history() -> pd.DataFrame:
     Loads historical quality metrics.
     """
     if not HISTORY_FILE.exists():
-        return pd.DataFrame
+        return pd.DataFrame()
 
     return pd.read_csv(HISTORY_FILE)
 

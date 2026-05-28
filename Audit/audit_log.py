@@ -2,6 +2,8 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+from typing import Union, Dict, Any
+
 #Location where audits will be stored
 AUDIT_LOG_PATH = Path("outputs/audit_log.jsonl")
 
@@ -12,9 +14,9 @@ def log_event(
         action: str,
         source: str,
         reason: str,
-        record_id: str | int | None = None,
+        record_id: Union[str, int, None] = None,
         severity: str = "INFO",
-        metadata: dict | None = None
+        metadata: Union[dict, None] = None
 ):
     """
     Writes a single audit event to a JSON Lines file.

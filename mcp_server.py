@@ -150,6 +150,15 @@ def monitor_dataset(req: AnalyzeRequest):
     alerts = evaluate_alerts(metrics)
     log_run_metrics(metrics)
 
+    # Persist the full resolved state to outputs/quality_results.csv
+    import os
+    os.makedirs("outputs", exist_ok=True)
+    full_resolved = pd.concat([cleaned_df, quarantined_df], ignore_index=True)
+    full_resolved.to_csv(DATA_PATH, index=False)
+    
+    # Save quarantine separately for Streamlit legacy fallback compatibility
+    quarantined_df.to_csv("outputs/quarantine.csv", index=False)
+
     print("done")
     return {
         "tool": "monitor",
@@ -186,7 +195,7 @@ def submit_review_decision(decision: ReviewDecision):
         df,
         employee_id=decision.employee_id,
         decision=decision.decision,
-        notes=decision.reviewer_notes
+        notes=decision.review_notes
     )
 
     df.to_csv(DATA_PATH, index=False)
